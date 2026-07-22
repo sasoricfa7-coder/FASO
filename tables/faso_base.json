@@ -1,106 +1,97 @@
 {
   "en_tete": {
     "nom": "mon_langage_base",
-    "style_bloc": "delimitteurs"
+    "style_bloc": "delimiteurs"
   },
-  
+
   "mots_cles": {
-    "plage": "100 - 299",
     "controle_flux": {
-      "if": 100,
-      "elif": 101,
-      "else": 102,
-      "for": 103,
-      "while": 104,
-      "break": 105,
-      "continue": 106,
-      "pass": 107,
-      "in" : 108
+      "if_stmt": "if",
+      "elif_stmt": "elif",
+      "else_stmt": "else",
+      "for_stmt": "for",
+      "while_stmt": "while",
+      "break_stmt": "break",
+      "continue_stmt": "continue",
+      "pass_stmt": "pass",
+      "in_op": "in"
     },
     "fonctions": {
-      "def": 200,
-      "return": 201
+      "def_stmt": "def",
+      "return_stmt": "return"
     }
   },
 
   "valeurs_litterales": {
-    "plage": "300 - 399",
     "booleens_et_speciaux": {
-      "true":300,
-      "false": 301,
-      "none": 302
+      "true_lit": "true",
+      "false_lit": "false",
+      "none_lit": "none"
     }
   },
 
   "operateurs": {
-    "plage": "400 - 1100",
-    
     "arithmetiques": {
-      "+": 400,
-      "-": 401,
-      "*": 402,
-      "/": 403,
-      "%": 404,
-      "**": 405
+      "add_op": "+",
+      "sub_op": "-",
+      "mul_op": "*",
+      "div_op": "/",
+      "mod_op": "%",
+      "pow_op": "**"
     },
-
     "affectation": {
       "simple": {
-        "=": 500
+        "assign_op": "="
       },
       "combines": {
-        "+=": 600,
-        "-=": 601,
-        "*=": 602,
-        "/=": 603,
-        "%=": 604,
-        "=+" : 605,
-        "=-" : 606,
-        "=*" : 607,
-        "=/" : 608,
-        "=%" : 609
+        "add_assign_op": "+=",
+        "sub_assign_op": "-=",
+        "mul_assign_op": "*=",
+        "div_assign_op": "/=",
+        "mod_assign_op": "%=",
+        "add_assign_alt": "=+",
+        "sub_assign_alt": "=-",
+        "mul_assign_alt": "=*",
+        "div_assign_alt": "=/",
+        "mod_assign_alt": "=%"
       },
       "incrementation_decrementation": {
-        "++": 700,
-        "--": 701
+        "increment_op": "++",
+        "decrement_op": "--"
       }
     },
-
     "comparaison": {
       "standard": {
-        "==": 800,
-        "!=": 801,
-        "<": 802,
-        ">": 803,
-        "<=": 804,
-        ">=": 805
+        "eq_op": "==",
+        "neq_op": "!=",
+        "lt_op": "<",
+        "gt_op": ">",
+        "lte_op": "<=",
+        "gte_op": ">="
       },
       "alternatifs_debutants": {
-        "=<": 900,
-        "=>": 901,
-        "=!": 902
+        "lte_alt_op": "=<",
+        "gte_alt_op": "=>",
+        "neq_alt_op": "=!"
       }
     },
-
     "logiques": {
-      "and": 1000,
-      "or": 1001,
-      "not": 1002
+      "and_op": "and",
+      "or_op": "or",
+      "not_op": "not"
     }
   },
 
   "delimiters_et_structure": {
-    "plage": "1100 - 1199",
     "blocs": {
-      "{": 1100,
-      "}": 1101
+      "block_open": "{",
+      "block_close": "}"
     }
   },
 
   "commentaires": {
-    "plage": "500 - 599",
     "ligne": {
-      ";": 1200
+      "line_comment": ";"
     }
   }
 }
