@@ -1,66 +1,105 @@
 {
-	"en_tete" : {
-		"nom" : "python_base",
-		"style_bloc" : "delimitteurs"
-	},
-	"mots_cles" : {
-		"if" : 100,
-		"elif" : 101,
-		"else" : 102,
-		"for" : 103,
-		"while" : 104,
-		"break" : 105,
-		"continue" : 106,
-		"def" : 107,
-		"return" : 108,
-		"pass" : 109
-	},
-	"valeurs_litterales" : {
-		"true" : 200,
-		"false" : 201,
-		"none" : 202
-	},
-	"operateurs_arith" : {
-		"+" : 300,
-		"-" : 301,
-		"*" : 302,
-		"/" : 303,
-		"%" : 304,
-		"**" : 305
-	},
-	"delimitteurs" : {
-		"{" : 400,
-		"}" : 401
-	},
-	"commentaires" : {
-		";" : 500
-	},
-	"operateur_en_plus" : {
-		"++" : 600,
-		"--" : 601,
-		"-=" : 602,
-		"+=" : 603,
-		"/=" : 604,
-		"*=" : 605,
-		"%=" : 606
-	},
-	"operateur_affection" : {
-		"=" : 700
-	},
-	"operateur_comparaison" : {
-		"==" : 800,
-		"!=" : 801,
-		"<" : 802,
-		">" : 803,
-		"<=" : 804,
-		">=" : 805,
-		"=<" : 806,
-		"=>" : 807,
-		"=!" : 808
-	},
-	"operateur_logique" : {
-		"and" : 900,
-		"or" : 901,
-		"not" : 902
-	}
+  "en_tete": {
+    "nom": "mon_langage_base",
+    "style_bloc": "delimitteurs"
+  },
+  
+  "mots_cles": {
+    "plage": "100 - 199",
+    "controle_flux": {
+      "if": 100,
+      "elif": 101,
+      "else": 102,
+      "for": 103,
+      "while": 104,
+      "break": 105,
+      "continue": 106,
+      "pass": 109
+    },
+    "fonctions": {
+      "def": 110,
+      "return": 111
+    }
+  },
+
+  "valeurs_litterales": {
+    "plage": "200 - 299",
+    "booleens_et_speciaux": {
+      "true": 200,
+      "false": 201,
+      "none": 202
+    }
+  },
+
+  "operateurs": {
+    "plage": "300 - 899",
+    
+    "arithmetiques": {
+      "+": 300,
+      "-": 301,
+      "*": 302,
+      "/": 303,
+      "%": 304,
+      "**": 305
+    },
+
+    "affectation": {
+      "simple": {
+        "=": 700
+      },
+      "combines": {
+        "+=": 603,
+        "-=": 602,
+        "*=": 605,
+        "/=": 604,
+        "%=": 606,
+        "=+" : 607,
+        "=-" : 608,
+        "=*" : 610,
+        "=/" : 609,
+        "=%" : 611
+      },
+      "incrementation_decrementation": {
+        "++": 600,
+        "--": 601
+      }
+    },
+
+    "comparaison": {
+      "standard": {
+        "==": 800,
+        "!=": 801,
+        "<": 802,
+        ">": 803,
+        "<=": 804,
+        ">=": 805
+      },
+      "alternatifs_debutants": {
+        "=<": 806,
+        "=>": 807,
+        "=!": 808
+      }
+    },
+
+    "logiques": {
+      "and": 900,
+      "or": 901,
+      "not": 902
+    }
+  },
+
+  "delimiters_et_structure": {
+    "plage": "400 - 499",
+    "blocs": {
+      "{": 400,
+      "}": 401
+    }
+  },
+
+  "commentaires": {
+    "plage": "500 - 599",
+    "ligne": {
+      ";": 500
+    }
+  }
 }
