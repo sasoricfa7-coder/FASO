@@ -1,0 +1,66 @@
+{
+	"en_tete" : {
+		"nom" : "python_base",
+		"style_bloc" : "indentation"
+	},
+	"mots_cles" : {
+		"if" : 100,
+		"elif" : 101,
+		"else" : 102,
+		"for" : 103,
+		"while" : 104,
+		"break" : 105,
+		"continue" : 106,
+		"def" : 107,
+		"return" : 108,
+		"pass" : 109
+	},
+	"valeurs_litterales" : {
+		"true" : 200,
+		"false" : 201,
+		"none" : 202
+	},
+	"operateurs_arith" : {
+		"+" : 300,
+		"-" : 301,
+		"*" : 302,
+		"/" : 303,
+		"%" : 304,
+		"**" : 305
+	},
+	"delimitteurs" : {
+		"{" : 400,
+		"}" : 401
+	},
+	"commentaires" : {
+		";" : 500
+	},
+	"operateur_en_plus" : {
+		"++" : 600,
+		"--" : 601,
+		"-=" : 602,
+		"+=" : 603,
+		"/=" : 604,
+		"*=" : 605,
+		"%=" : 606
+	},
+	"operateur_affection" : {
+		"=" : 700
+	},
+	"operateur_comparaison" : {
+		"==" : 800,
+		"!=" : 801,
+		"<" : 802,
+		">" : 803,
+		"<=" : 804,
+		">=" : 805,
+		"=<" : 806,
+		"=>" : 807,
+		"=!" : 808
+	},
+	"operateur_logique" : {
+		"and" : 900,
+		"or" : 901,
+		"not" : 902
+	}
+}
