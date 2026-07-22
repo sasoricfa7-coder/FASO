@@ -15,10 +15,11 @@
       "break": 105,
       "continue": 106,
       "pass": 109
+      "in" : 110
     },
     "fonctions": {
-      "def": 110,
-      "return": 111
+      "def": 1000,
+      "return": 1001
     }
   },
 
