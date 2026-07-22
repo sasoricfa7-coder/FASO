@@ -1,7 +1,7 @@
 {
 	"en_tete" : {
 		"nom" : "python_base",
-		"style_bloc" : "indentation"
+		"style_bloc" : "delimitteurs"
 	},
 	"mots_cles" : {
 		"if" : 100,
