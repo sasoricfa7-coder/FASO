@@ -97,3 +97,15 @@ CONCEPTS = {
     # --- Commentaire / Comment (1200) ---
     "line_comment": 1200,
 }
+
+# Catégories génériques : jamais dans le JSON, car impossibles à lister
+# (identifiants, nombres, chaînes) ou artificielles (fin de fichier).
+# Generic categories: never in the JSON, since they're either impossible
+# to enumerate (identifiers, numbers, strings) or artificial (end of file).
+GENERIQUES = {
+    "IDENTIFIANT": 1,
+    "NOMBRE": 2,
+    "CHAINE": 3,
+    "CARACTERE" : 4,
+    "FIN_FICHIER": 5,
+}

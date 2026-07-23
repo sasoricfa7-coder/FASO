@@ -18,6 +18,8 @@ import sys
 
 import charger_json
 import verificateur_json
+import lexer
+
 from schema_canonique import CONCEPTS
 
 VERT = "\033[1m\033[92m"
@@ -32,4 +34,4 @@ if not verificateur_json.verifier(mots_par_concept, CONCEPTS):
 # Final table used by the Lexer: source word -> internal code
 token_map = {mot: CONCEPTS[concept_id] for concept_id, mot in mots_par_concept.items()}
 
-print(f"{VERT}Pipeline initialisé avec succès : {len(token_map)} tokens chargés.{RESET}")
+lexer
