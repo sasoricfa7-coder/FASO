@@ -1,0 +1,11 @@
+; Programme de test pour le langage FASO
+def ma_fonction {
+    x = 10
+    y = 20
+    
+    if x < y {
+        x += 5
+    } else {
+        y -= 2
+    }
+}
