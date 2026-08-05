@@ -20,6 +20,8 @@ import sys
 
 from schema_canonique import CONCEPTS, GENERIQUES
 
+def arret() :
+    sys.exit(1)
 
 def _trouver_mot(token_map, code_recherche):
     """
@@ -144,13 +146,13 @@ def chaine(token, ligne, colonne, index, code_source):
     while index < len(code_source) and code_source[index] != '"':
         if code_source[index] == "\n":
             print(f"Erreur lexicale : chaîne non terminée, ouverte à la ligne {ligne_depart}, colonne {colonne_depart}.")
-            sys.exit(1)
+            arret()
         index += 1
         colonne += 1
 
     if index >= len(code_source):
         print(f"Erreur lexicale : chaîne non terminée, ouverte à la ligne {ligne_depart}, colonne {colonne_depart}.")
-        sys.exit(1)
+        arret()
 
     contenu = code_source[depart_contenu:index]
     index += 1
@@ -181,7 +183,7 @@ def caractere_litteral(token, ligne, colonne, index, code_source):
 
     if index >= len(code_source) or code_source[index] == "'":
         print(f"Erreur lexicale : un caractère doit contenir exactement un caractère, ligne {ligne_depart}, colonne {colonne_depart}.")
-        sys.exit(1)
+        arret()
 
     valeur = code_source[index]
     index += 1
@@ -189,7 +191,7 @@ def caractere_litteral(token, ligne, colonne, index, code_source):
 
     if index >= len(code_source) or code_source[index] != "'":
         print(f"Erreur lexicale : un caractère doit contenir exactement un caractère, ligne {ligne_depart}, colonne {colonne_depart}.")
-        sys.exit(1)
+        arret()
 
     index += 1
     colonne += 1
@@ -256,7 +258,7 @@ def cas_symbole(token_map, token, ligne, colonne, index, code_source):
         return ligne, colonne + 1, index + 1
 
     print(f"Erreur lexicale : symbole '{un}' non reconnu à la ligne {ligne}, colonne {colonne}.")
-    sys.exit(1)
+    arret()
 
 
 def analyser_lexer(token_map, chemin_fichier="mon_programme.faso"):
