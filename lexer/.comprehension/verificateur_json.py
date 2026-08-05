@@ -25,7 +25,7 @@ def verifier(mots_par_concept, concepts_attendus) :
     for concept_id, mot in mots_par_concept.items() :
         if mot in mots_vus : 
             valide = False
-            print(f"{ROUGE}Erreur : le mot '{mot}' est utilisé à la fois pour '{mots_vus[mot]}' et '{concept_id}'.{RESET}")
+            print(f"{Rouge}Erreur : le mot '{mot}' est utilisé à la fois pour '{mots_vus[mot]}' et '{concept_id}'.{Reset}")
 
         else :
             mots_vus[mot] = concept_id
