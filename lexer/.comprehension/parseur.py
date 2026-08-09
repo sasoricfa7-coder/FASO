@@ -48,75 +48,198 @@ class Parseur :
                 print(f"Erreur de syntaxe (fin de fichier inattendue) : {message_erreur}")
                 arret()
 
+    #Le mieux ce sont des petites fonctions que je pourrai appeller comme je veux
+    def verifi_none(self) :
+        if self.pointer :
+            return True
+        return False
+
+    def voir_inclu(self, ensemble) : # J'utilise un ensemble pour ne pas parcourir
+        E = set ()
+        if isinstance(ensemble, (int, float)):
+            E.add(ensemble)
+        else :
+            E.update(ensemble)
+            
+        if self.pointer['code'] in E :
+            return True
+        return False
+
+    def actuel_pointer(self) :
+        code_actuel = self.pointer['code']
+        return code_actuel
+  
+    def appel_attendre(self, mes_erreur) :
+        self.attendre(self.actuel_pointer(), mes_erreur)
+
+    def tout_est_bon(self, recu_test) :
+        if self.verifi_none() and self.voir_inclu(recu_test) :
+            return True
+        return False
+
+
+        
+#---------------------------------------------- = / += --------------------------------------------------------------------------
     def analyser_affectation(self) :
         # On attend d'abord l'identifiant (code 1 d'après vos génériques)
-        self.attendre(1, "Nom de variable attendu")
-        
-        # Construction propre d'une liste plate de tous les codes valides acceptés ici
-        # (arithmétiques 400-405, affectations combinées 600-609, simple 500, incrémentation 700-701, etc.)
-        liste_affectation = (
-            list(range(400, 406)) +
-            list(range(600, 610)) +
-            [500] +
-            list(range(700, 702)) +
-            list(range(800, 806)) +
-            list(range(900, 903)) +
-            [1102] + [1104]
-        )
-        
-        if self.pointer and self.pointer['code'] in liste_affectation:
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un signe d'affectation/comparaison/d'incrémentation/décrémentation est attendu")
-        else:
-            print("Erreur : un signe d'affectation/comparaison/d'incrémentation/décrémentation est attendu")
+        self.appel_attendre("Un identifiant est attendu")
+
+        if self.tout_est_bon(list(range(600, 610))) : # +=
+            self.appel_attendre("Un operateur combiner est attendu")
+            if self.tout_est_bon(1) :
+                self.appel_attendre("Un identifiant est attendu")
+
+        elif self.tout_est_bon(500) : # =
+            self.appel_attendre("Un operateur d'affecttion est attendu")
+            
+            if self.tout_est_bon(902) : # not
+                self.appel_attendre("Un operateur de negation est attendu")
+                if self.tout_est_bon([900, 901]) : #True  False
+                    self.appel_attendre("Une valeur logique est attendu")
+
+            elif self.tout_est_bon([900, 901]) : # True False
+                self.appel_attendre("Une valeur logique est attendu")
+                if self.tout_est_bon([1000, 1001]) : # AND OR 
+                    self.appel_attendre("Un operateur logique est attendu")
+                    if self.tout_est_bon([900, 901]) :
+                       self.appel_attendre("Une valeur logique est attendu")
+
+            elif self.tout_est_bon(2) : # Nombre 
+                self.appel_attendre("Un nombre est attendu")
+                if self.tout_est_bon(list(range(400, 406))) : # + / - * %
+                    self.appel_attendre("Un operateur arithmétique est attendu")
+                    sure = False
+                    while self.tout_est_bon(2) : # Nombre
+                        sure = True
+                        self.appel_attendre("Un nombre est attendu")
+                        if self.tout_est_bon(list(range(400, 406))) : # + / - * %
+                            sure = False
+                            self.appel_attendre("Un operateur arithmétique est attendu")
+                    if not sure :
+                        print("Après un operateur arithmétique il faut un nombre.")
+                        arret()
+
+            elif self.tout_est_bon(4) : # Caractère
+                self.appel_attendre("Un caractère est attendu")
+                
+            elif self.tout_est_bon(3) : # chaine_caractère
+                self.appel_attendre("Une chaine de caractère est attendu")
+                if self.tout_est_bon(list(range(400, 403))) :
+                    self.appel_attendre("Un operateur arithmétique comme + ou * ou - est attendu")
+                    while self.tout_est_bon(3) : # chaine_caractère
+                        self.appel_attendre("Une chaine de caractère est attendu")
+                        if self.tout_est_bon(list(range(400, 403))) :
+                            self.appel_attendre("Un operateur arithmétique comme + ou * ou - est attendu")
+
+            elif self.tout_est_bon(1) : # Identifiant
+                self.appel_attendre("Un Identifiant est attendu")
+                if self.tout_est_bon([700, 701]) : # -- ou ++
+                    self.appel_attendre("Un operateur d'incrémentation ou de decrémentation est attendu")
+                elif self.tout_est_bon(list(range(400, 406))) :# + / - * %
+                    self.appel_attendre("Un  operateur arithmétique est attendu")
+                        sure = False
+                        while self.tout_est_bon(2) : # Identifiant
+                            sure = True
+                            self.appel_attendre("Un Identifiant est attendu")
+                            if self.tout_est_bon(list(range(400, 406))) : # + / - * %
+                                sure = False
+                                self.appel_attendre("Un operateur arithmétique est attendu")
+                        if not sure :
+                            print("Après un operateur arithmétique il faut un Identifiant.")
+                            arret()
+
+                comparaison = set(range(800, 806))
+                comparaison.update(set(range(900, 903)))
+                elif self.tout_est_bon(comparaison) : # > <
+                    sure = False
+                    self.appel_attendre("Un operateur de comparaison est attendu")
+                    if self.tout_est_bon(1) : # Identifiant
+                        sure = True
+                        self.appel_attendre("Un Identifiant est attendu")
+                        if self.tout_est_bon([1000, 1001]) : # AND OR 
+                            self.appel_attendre("Un operateur logique est attendu")
+                            sure = False
+                            if self.tout_est_bon(1) : # Identifiant
+                                sure = True
+                                self.appel_attendre("Un Identifiant est attendu")
+                                while self.tout_est_bon(comparaison) : # > <
+                                    sure = False
+                                    self.appel_attendre("Un operateur de comparaison est attendu")
+                                    if self.tout_est_bon(1) : # Identifiant
+                                        sure = True
+                                        self.appel_attendre("Un Identifiant est attendu")
+                                        if self.tout_est_bon([1000, 1001]) : # AND OR 
+                                            sure = False
+                                            self.appel_attendre("Un operateur logique est attendu")
+                                            if self.tout_est_bon(1) : # Identifiant
+                                                sure = True
+                                                self.appel_attendre("Un Identifiant est attendu")
+                                if not sure :
+                                    print("Après un operateur de comparaison il faut un Identifiant.")
+                                    arret()
+                    else :
+                        print("Après un operateur de comparaison il faut un Identifiant.")
+                        arret()
+
+
+
+#-------------------------------------------------------------IF/elif/while--------------------------------------------------------------   
+    def analyser_if(self) :
+        self.appel_attendre("une condition est attendu")
+
+        if self.tout_est_bon(1) : # Identifiant doit être de type logique
+            self.appel_attendre("Désole comme c'est la version 1, les conditions, boucles n'accepte que les variables de type booléen pouvant être précéder de not")
+
+        elif self.tout_est_bon(1002) : # Not
+            self.appel_attendre("Un inverseur logique est attendu")
+            if self.tout_est_bon(1) : # Identifiant
+                self.appel_attendre("Désole comme c'est la version 1, les conditions, boucles n'accepte que les variables de type booléen pouvant être précéder de not")
+            else :
+                print("Désole comme c'est la version 1, les conditions, boucles n'accepte que les variables de type booléen pouvant être précéder de not")
+                arret()
+
+        elif self.tout_est_bon(2) : # c'est moi qui ajoute par plaisir : 0 false et autre chose pour True
+            self.appel_attendre("Un nombre est attendu : 0 false et autre chose pour True")
+
+        if self.tout_est_bon(1100) : # :
+            self.appel_attendre("Un délimitteur d'ouverture est attendu")
+        else :
+            print("Un délimitteur d'ouverture est attendu")
             arret()
+            
 
-        liste_affectation = list(range(1, 5))
-        
-        if self.pointer and self.pointer['code'] in liste_affectation:
-            code_actuel = self.pointer['code'] # A cause de la virgule, après un identifiant on peut avoir un identifiant
-            self.attendre(code_actuel, "un Identifiant/Nombre/chaine_de_caractère/caractère est attendu")
+
+#-------------------------------------------------------Else--------------------------------------------------------------
+    def analyser_else(self) :
+        self.appel_attendre("une condition est attendu")
+        if self.tout_est_bon(1_100) :
+            self.appel_attendre("le delimitteur d'ouverture de bloc est attendu")
         else :
-            print("Erreur : un Identifiant/Nombre/chaine_de_caractère/caractère est attendu")
-            arret()
+            
 
-    def analyser_if(self, recu) :
-        self.attendu(recu, "une condition est attendu")
 
-        liste_affectation = (
-            [1102] + 
-            list(range(1, 5, 1)) +
-            list(range(300, 303, 1))
-        )
-        #ici je suis un peu bloquer car quand le if commence par ( et directement par une variable c'est pas pareil
-        if self.pointer and self.pointer['code'] in liste_affectation:
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "une comparaison est attendue")
 
-        else :
-            print("Erreur : une comparaison est attendue")
 
-        #Le reste je laisse ca pour plus tard car ca devient complexe à cause des possibilités
 
-    def analyser_else(self, recu) :
-        self.attendu(recu, "une condition est attendu")
-        if self.pointer and self.pointer['code'] == 1_100:
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "le delimitteur d'ouverture de bloc est attendu")
-        else :
-            print("Erreur : le delimitteur d'ouverture de bloc est attendu")
 
-    def analyser_in(self, recu) :
-        self.attendu(recu, "un inclu est attendu")
-        liste = [1, 3]
-        if self.pointer and self.pointer['code'] in liste:
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un Identifiant/chaine_caractère est attendu")
-        else :
-            print("Erreur : un Identifiant/chaine_caractère est attendu")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def analyser_def(self, recu) :
-        self.attendu(recu, "une fonction est attendu")
+        self.attendre(recu, "une fonction est attendu")
         if self.pointer and self.pointer['code'] == 1102 :
             code_actuel = self.pointer['code']
             self.attendre(code_actuel, "un parent ouvrant est attendu")
@@ -130,38 +253,9 @@ class Parseur :
             print("Erreur : un Identifiant est attendu")
         # je m'arrête ici car après l'identifiant il peut y avoir plusieurs possibilité comme une virgule, un autre identifant 
 
-    def analyser_return(self, recu) :
-        self.attendu(recu, "un retour est attendu")
-
-        liste = (
-            list(range(1, 5, 1)) + 
-            list(range(300, 303, 1)) + 
-        )
-        if self.pointer and self.pointer['code'] in liste :
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un Nombre/chaine_caractère/caractère/identifiant/booléen est attendu")
-
-        else :
-            print("Erreur : un Nombre/chaine_caractère/caractère/identifiant/booléen est attendu")
-    #Le reste aussi ya trop de possibilité
-
-    def analyser_break (self, recu) :
-        self.attendu(recu, "une fonctione pour quitter est attendu")
-        if self.pointer and self.pointer['code'] == 1 :
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un identifiant est attendu")
-        else :
-            print("Erreur : un identifiant est attendu")
-
-        if self.pointer and self.pointer['code'] == 1102 :
-            code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un parent ouvrant est attendu")
-        else :
-            print("Erreur : un parent ouvrant est attendu")
-
         if self.pointer and self.pointer['code'] == 1103 :
             code_actuel = self.pointer['code']
-            self.attendre(code_actuel, "un parent fermant est attendu") # parent ouvrant ( fermant ) comme le langage est personnalisable donc vaut mieux eviter de dire direct ()
+            self.attendre(code_actuel, "un parent fermant est attendu")
         else :
             print("Erreur : un parent fermant est attendu")
 
@@ -170,6 +264,33 @@ class Parseur :
             self.attendre(code_actuel, "un delimitteur ouvrant est attendu")
         else :
             print("Erreur : un delimitteur ouvrant est attendu") 
+
+    def analyser_return(self, recu) :
+        self.attendre(recu, "un retour est attendu")
+
+        liste = [1]
+        if self.pointer and self.pointer['code'] in liste :
+            code_actuel = self.pointer['code']
+            self.attendre(code_actuel, "un identifiant est attendu")
+
+
+    def analyser_break (self, recu) :
+        self.attendre(recu, "une fonctione pour quitter est attendu")
+        if self.pointer and self.pointer['code'] == 1 :
+            code_actuel = self.pointer['code']
+            self.attendre(code_actuel, "un identifiant est attendu")
+
+        if self.pointer and self.pointer['code'] == 1102 :
+            code_actuel = self.pointer['code']
+            self.attendre(code_actuel, "un parent ouvrant est attendu")
+
+        if self.pointer and self.pointer['code'] == 1103 :
+            code_actuel = self.pointer['code']
+            self.attendre(code_actuel, "un parent fermant est attendu") # parent ouvrant ( fermant ) comme le langage est personnalisable donc vaut mieux eviter de dire direct ()
+
+        if self.pointer and self.pointer['code'] == 1100 :
+            code_actuel = self.pointer['code']
+            self.attendre(code_actuel, "un delimitteur ouvrant est attendu")
     
     def analyser(self) : 
         while self.pointer and self.pointer['type'] != "FIN_FICHIER" : 
@@ -178,23 +299,21 @@ class Parseur :
                     self.analyser_affectation()
 
                 case 100, 101, 104 : # if elif et while on les même cas 
-                    self.analyser_if(self.pointer['code'])
+                    self.analyser_if()
 
                 case 103 : #else
-                    self.analyser_else(self.pointer['code'])
+                    self.analyser_else()
                 # Je laisse tomber le cas du for car j'ai exclu les collections pour la v1
 
-                case 108 : #in
-                    self.analyser_in(self.pointer['code'])
 
                 case 200 : #def
-                    self.analyser_def(self.pointer['code'])
+                    self.analyser_def()
 
                 case 201 : #return
-                    self.analyser_return(self.pointer['code'])
+                    self.analyser_return()
 
                 case 105 : #break car on fera comme en go pour que le break fonctionne on doit nommer le bloc que l'on veut quitter et le donner au break
-                    self.analyser_break(self.pointer['code']) # La forme que j'ai decider par exemple Monbloc () : 
+                    self.analyser_break() # La forme que j'ai decider par exemple Monbloc () : 
                     # Pour quitter on fait break Monbloc()
                 case _:
                     # Gérer les autres tokens ou avancer pour éviter les boucles infinies
