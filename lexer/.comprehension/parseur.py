@@ -101,6 +101,14 @@ class Parseur :
                 self.attendre(902, "Un operateur de negation est attendu")
                 self.attendre([900, 901], "Une valeur logique est attendue")
 
+            elif self.tout_est_bon(302) : # none
+                self.attendre(302, "Une valeur vide est attendu")
+
+            elif self.tout_est_bon(203) : # input
+                self.attendre(203, "une fonction qui recupère la saisie de l'utilisateur")
+                self.attendre(1102, "Un parent ouvrant est attendu après le nom de la fonction déclarée")
+                self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
+
             elif self.tout_est_bon([900, 901]) : # True False
                 self.attendre([900, 901], "Une valeur logique est attendue")
                 if self.tout_est_bon([1000, 1001]) : # AND OR 
@@ -197,12 +205,12 @@ class Parseur :
                             self.attendre(operateur, "Un operateur arithmétique est attendu")
                             self.attendre(set(range(1, 5)), "Une valeur est entendu après un operateur arithmétique est attendu")
         self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
-
-
-
-
+        self.attendre(1100, "un delimiteur de bloc ouvrant est attendu")
 #-----------------------------------------------------Return-----------------------------------------------------------------------                
     def analyser_return(self) :
+
+        if self.tout_est_bon(302) : # none
+            self.attendre(302, "Une valeur vide est attendu")
         liste = (
             set(range(1, 5)) +
             set(range(300, 302))
@@ -214,7 +222,7 @@ class Parseur :
                 while self.tout_est_bon(operateur) : # valeur
                     self.attendre(operateur, "Un operateur arithmétique est attendu")
                     self.attendre(set(range(1, 5)), "Un identifiant est entendu après un operateur arithmétique est attendu")
-            elif self.tout_est_bon(1104) :
+            elif self.tout_est_bon(1104) : # ,
                 while self.tout_est_bon(1104) :
                     self.attendre(1104, "Un séparateur de valeur est attendu")
                     self.attendre(liste, "Une valeur est attendu")
@@ -231,8 +239,40 @@ class Parseur :
         self.attendre(1102, "Une parenthèse ouvrante '(' est attendue")
         self.attendre(1103, "Une parenthèse fermante ')' est attendue")
         self.attendre(1100, "Un délimitteur ouvrant ':' est attendu")
-
-
+#----------------------------------------------Print-----------------------------------------------------------------------------------
+    def analyser_print(self) :
+        self.attendre(1102, "Un parent ouvrant est attendu après le nom de la fonction déclarée")
+        liste = set(range(1, 5))
+        liste.update([300, 301])
+        if self.tout_est_bon(liste) : # valeur
+            self.attendre(liste, "Une valeur est attendu")
+            if self.tout_est_bon(set(range(400, 406))) : # + - 
+                operateur = set(range(400, 406))
+                while self.tout_est_bon(operateur) : # valeur
+                    self.attendre(operateur, "Un operateur arithmétique est attendu")
+                    self.attendre(set(range(1, 5)), "Un identifiant est entendu après un operateur arithmétique est attendu")
+            elif self.tout_est_bon(1104) :
+                while self.tout_est_bon(1104) :
+                    self.attendre(1104, "Un séparateur de valeur est attendu")
+                    self.attendre(liste, "Une valeur est attendu")
+                    if self.tout_est_bon(set(range(400, 406))) : # + - 
+                        operateur = set(range(400, 406))
+                        while self.tout_est_bon(operateur) : # valeur
+                            self.attendre(operateur, "Un operateur arithmétique est attendu")
+                            self.attendre(set(range(1, 5)), "Une valeur est entendu après un operateur arithmétique est attendu")
+        self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
+#-----------------------------------------------Continue----------------------------------------------------------------------------
+    def analyser_continue(self) :
+        ligne = self.pointer["ligne"]
+        self.attendre(105, "Une fonction pour continuer est attendu")
+        if ligne == self.pointer["ligne"] :
+            self.attendre(0, "Après une fonction continuer rien n'est mit sur la ligne")
+#-----------------------------------------------PASS------------------------------------------------------------------------------------
+    def analyser_pass(self) :
+        ligne = self.pointer["ligne"]
+        self.attendre(105, "Une fonction pour passer est attendu")
+        if ligne == self.pointer["ligne"] :
+            self.attendre(0, "Après une fonction passer rien n'est mit sur la ligne")
 #------------------------------------------------ANALYSER---------------------------------------------------------------------------
     def analyser(self) : 
         while self.pointer and self.pointer['type'] != "FIN_FICHIER" : 
@@ -240,11 +280,11 @@ class Parseur :
                 case 1 : # identifiant
                     self.attendre(1, "Un identifiant est attendu")
                     self.analyser_affectation()
-                case 100 | 101 | 104 : # if, elif, while 
-                    self.attendre(self.pointer['code'], "Mot-clé de structure conditionnelle/boucle attendu")
+                case 100 | 101 | 103 : # if, elif, while 
+                    self.attendre([100, 101, 103], "Mot-clé de structure conditionnelle/boucle attendu")
                     self.analyser_if()
                 case 103 : # else
-                    self.attendre(103, "Le mot-clé condition sinon est attendu")
+                    self.attendre(102, "Le mot-clé condition sinon est attendu")
                     self.analyser_else()
                 case 200 : # def
                     self.attendre(200, "Le mot-clé de création de fonction est attendu")
@@ -252,12 +292,33 @@ class Parseur :
                 case 201 : # return
                     self.attendre(201, "Le mot-clé du retour est attendu")
                     self.analyser_return()
-                case 105 : # break
-                    self.attendre(105, "Le mot clé pour sortir d'un bloc est attendu")
+                case 104 : # break
+                    self.attendre(104, "Le mot clé pour sortir d'un bloc est attendu")
                     self.analyser_break()
+                case 105 : # continue
+                    self.analyser_continue()
+                case 106 : # pass
+                    self.analyser_pass()
+                case 202 : # print
+                    self.attendre(202, "Une fonction pour afficher est attendu")
+                    self.analyser_print()
                 case _ :
+                    #self.attendre(0, "terme inconnu / mauvais emplacement")
                     self.avancer()
+
+class AST :
+    def __init__(self) :
+        self.instruction = []
+
+    def ajouter_noeud(self, noeud) :
+        self.instruction.append(noeud)
 
 def debut(token_liste, code_source="") :
     test = Parseur(token_liste, code_source)
     test.analyser()
+
+    mon_ast = AST()
+    for token in token_liste :
+        mon_ast.ajouter_noeud(token)
+
+    return mon_ast

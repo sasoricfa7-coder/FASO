@@ -1,1 +1,9 @@
-def X(True , False)
+def X(A) 
+	age = age++
+
+print("Entrez votre age : ")
+age = input()
+
+age = X(age)
+
+print("Vous aurai : ", age, "ans l'an prochain")

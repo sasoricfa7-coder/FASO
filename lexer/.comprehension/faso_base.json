@@ -9,16 +9,16 @@
       "if_stmt": "if",
       "elif_stmt": "elif",
       "else_stmt": "else",
-      "for_stmt": "for",
       "while_stmt": "while",
       "break_stmt": "break",
       "continue_stmt": "continue",
-      "pass_stmt": "pass",
-      "in_op": "in"
+      "pass_stmt": "pass"
     },
     "fonctions": {
       "def_stmt": "def",
-      "return_stmt": "return"
+      "return_stmt": "return",
+      "print_stmt" : "print",
+      "input_stmt" : "input"
     }
   },
 

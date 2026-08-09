@@ -18,4 +18,4 @@ token_map = {mot : cop[concept_id] for concept_id, mot in mots_par_concepts.item
 
 token, code_source = lxr.analyser(token_map) # Le lexer nous retourne les token et le code source
 
-par.debut(token, code_source)
+mon_ast = par.debut(token, code_source)
