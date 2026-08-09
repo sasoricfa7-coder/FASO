@@ -3,7 +3,7 @@ import sys
 import charger_json as chj
 import verificateur_json as vrj
 import lexer as lxr
-import pprint as p
+import parseur as par
 
 #Les froms
 from schema_canonique import CONCEPTS as cop
@@ -18,5 +18,4 @@ token_map = {mot : cop[concept_id] for concept_id, mot in mots_par_concepts.item
 
 token, code_source = lxr.analyser(token_map) # Le lexer nous retourne les token et le code source
 
-print("----Tokens générés----")
-p.pprint(token)
+par.debut(token, code_source)
