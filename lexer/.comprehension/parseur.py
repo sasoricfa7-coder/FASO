@@ -18,7 +18,7 @@ class Parseur :
             self.pointer = None
         return self.pointer
         
-    def attendre(self, code_attendu, message_erreur) :
+    def attendre(self, code_attendu, message_erreur = "") :
         # Gère de manière unifiée un code unique ou une liste/ensemble de codes attendus
         E = set()
         if isinstance(code_attendu, (int, float)):
@@ -79,102 +79,97 @@ class Parseur :
 #---------------------------------------------- = / += --------------------------------------------------------------------------
     def analyser_affectation(self) :
         if self.voir_inclu(1102) : # (
-            self.attendre(1102, "Un parent ouvrant est attendu")
+            self.attendre(1102)
             liste = list(range(1, 5)) + list(range(300, 302))
             
             if self.tout_est_bon(liste) :
-                self.attendre(liste, "Un identifiant/Nombre/caractère/chaine_caractère/valeur_logique est attendu")
+                self.attendre(liste)
                 while self.tout_est_bon(1104) : # ,
-                    self.attendre(1104, "Un separateur est attendu")
+                    self.attendre(1104)
                     self.attendre(liste, "Après un separateur il faut un identifiant/Nombre/caractère/chaine_caractère/valeur_logique")
             
             self.attendre(1103, "Un parent fermant est attendu")
 
         elif self.voir_inclu(range(600, 610)) : # +=
-            self.attendre(range(600, 610), "Un operateur combiner est attendu")
+            self.attendre(range(600, 610))
             self.attendre(1, "Un identifiant est attendu")
 
         elif self.voir_inclu(500) : # =
-            self.attendre(500, "Un operateur d'affectation est attendu")
+            self.attendre(500)
             
             if self.tout_est_bon(902) : # not
-                self.attendre(902, "Un operateur de negation est attendu")
+                self.attendre(902)
                 self.attendre([900, 901], "Une valeur logique est attendue")
 
             elif self.tout_est_bon(302) : # none
-                self.attendre(302, "Une valeur vide est attendu")
+                self.attendre(302)
 
             elif self.tout_est_bon(203) : # input
-                self.attendre(203, "une fonction qui recupère la saisie de l'utilisateur")
+                self.attendre(203)
                 self.attendre(1102, "Un parent ouvrant est attendu après le nom de la fonction déclarée")
                 self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
 
             elif self.tout_est_bon([900, 901]) : # True False
-                self.attendre([900, 901], "Une valeur logique est attendue")
+                self.attendre([900, 901])
                 if self.tout_est_bon([1000, 1001]) : # AND OR 
-                    self.attendre([1000, 1001], "Un operateur logique est attendu")
+                    self.attendre([1000, 1001])
                     self.attendre([900, 901], "Une valeur logique est attendue")
 
             elif self.tout_est_bon(2) : # Nombre 
-                self.attendre(2, "Un nombre est attendu")
+                self.attendre(2)
                 if self.tout_est_bon(range(400, 406)) : # + / - * %
-                    self.attendre(range(400, 406), "Un operateur arithmétique est attendu")
+                    self.attendre(range(400, 406))
                     self.attendre(2, "Après un operateur arithmétique il faut un nombre.")
                     while self.tout_est_bon(range(400, 406)) :
-                        self.attendre(range(400, 406), "Un operateur arithmétique est attendu")
+                        self.attendre(range(400, 406))
                         self.attendre(2, "Un nombre est attendu")
 
             elif self.tout_est_bon(4) : # Caractère
-                self.attendre(4, "Un caractère est attendu")
+                self.attendre(4)
                 
             elif self.tout_est_bon(3) : # chaine_caractère
-                self.attendre(3, "Une chaine de caractère est attendue")
+                self.attendre(3)
                 if self.tout_est_bon(range(400, 403)) :
-                    self.attendre(range(400, 403), "Un operateur arithmétique comme + ou * ou - est attendu")
+                    self.attendre(range(400, 403))
                     self.attendre(3, "Une chaine de caractère est attendue")
                     while self.tout_est_bon(range(400, 403)) :
-                        self.attendre(range(400, 403), "Un operateur arithmétique est attendu")
+                        self.attendre(range(400, 403))
                         self.attendre(3, "Une chaine de caractère est attendue")
 
             elif self.tout_est_bon(1) : # Identifiant
-                self.attendre(1, "Un Identifiant est attendu")
+                self.attendre(1)
                 if self.tout_est_bon([700, 701]) : # -- ou ++
-                    self.attendre([700, 701], "Un operateur d'incrémentation ou de decrémentation est attendu")
+                    self.attendre([700, 701])
                 elif self.tout_est_bon(range(400, 406)) :# + / - * %
-                    self.attendre(range(400, 406), "Un operateur arithmétique est attendu")
+                    self.attendre(range(400, 406))
                     self.attendre(1, "Après un operateur arithmétique il faut un Identifiant.")
                     while self.tout_est_bon(range(400, 406)) :
-                        self.attendre(range(400, 406), "Un operateur arithmétique est attendu")
+                        self.attendre(range(400, 406))
                         self.attendre(1, "Un Identifiant est attendu")
 
                 else :
                     comparaison = set(range(800, 806))
                     comparaison.update(set(range(900, 903)))
                     if self.tout_est_bon(comparaison) : # > <
-                        self.attendre(comparaison, "Un operateur de comparaison est attendu")
+                        self.attendre(comparaison)
                         self.attendre(1, "Un Identifiant est attendu")
                         if self.tout_est_bon([1000, 1001]) : # AND OR 
-                            self.attendre([1000, 1001], "Un operateur logique est attendu")
+                            self.attendre([1000, 1001])
                             self.attendre(1, "Un Identifiant est attendu")
                             while self.tout_est_bon(comparaison) : 
-                                self.attendre(comparaison, "Un operateur de comparaison est attendu")
+                                self.attendre(comparaison)
                                 self.attendre(1, "Un Identifiant est attendu")
                                 if self.tout_est_bon([1000, 1001]) :
-                                    self.attendre([1000, 1001], "Un operateur logique est attendu")
+                                    self.attendre([1000, 1001])
                                     self.attendre(1, "Un Identifiant est attendu")
 
 #-------------------------------------------------------------IF/elif/while--------------------------------------------------------------    
     def analyser_if(self) :
         if self.tout_est_bon(1) : 
-            self.attendre(1, "Un identifiant est attendu")
+            self.attendre(1)
         elif self.tout_est_bon(1002) : # Not
-            self.attendre(1002, "Un inverseur logique est attendu")
+            self.attendre(1002)
             self.attendre(1, "Un identifiant est attendu après le not")
-        elif self.tout_est_bon(2) : 
-            self.attendre(2, "Un nombre est attendu")
-        else:
-            self.attendre([1, 1002, 2], "Une condition valide est attendue")
-
         self.attendre(1100, "Un délimitteur d'ouverture ':' est attendu")
 
 #-------------------------------------------------------Else--------------------------------------------------------------
@@ -189,20 +184,20 @@ class Parseur :
         liste = set(range(1, 5))
         liste.update([300, 301])
         if self.tout_est_bon(liste) : # valeur
-            self.attendre(liste, "Une valeur est attendu")
+            self.attendre(liste)
             if self.tout_est_bon(set(range(400, 406))) : # + - 
                 operateur = set(range(400, 406))
                 while self.tout_est_bon(operateur) : # valeur
-                    self.attendre(operateur, "Un operateur arithmétique est attendu")
+                    self.attendre(operateur)
                     self.attendre(set(range(1, 5)), "Un identifiant est entendu après un operateur arithmétique est attendu")
             elif self.tout_est_bon(1104) :
                 while self.tout_est_bon(1104) :
-                    self.attendre(1104, "Un séparateur de valeur est attendu")
+                    self.attendre(1104)
                     self.attendre(liste, "Une valeur est attendu")
                     if self.tout_est_bon(set(range(400, 406))) : # + - 
                         operateur = set(range(400, 406))
                         while self.tout_est_bon(operateur) : # valeur
-                            self.attendre(operateur, "Un operateur arithmétique est attendu")
+                            self.attendre(operateur)
                             self.attendre(set(range(1, 5)), "Une valeur est entendu après un operateur arithmétique est attendu")
         self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
         self.attendre(1100, "un delimiteur de bloc ouvrant est attendu")
@@ -210,26 +205,26 @@ class Parseur :
     def analyser_return(self) :
 
         if self.tout_est_bon(302) : # none
-            self.attendre(302, "Une valeur vide est attendu")
+            self.attendre(302)
         liste = (
             set(range(1, 5)) +
             set(range(300, 302))
         )
         if self.tout_est_bon(liste) : # valeur
-            self.attendre(liste, "Une valeur est attendu")
+            self.attendre(liste)
             if self.tout_est_bon(set(range(400, 406))) : # + - 
                 operateur = set(range(400, 406))
                 while self.tout_est_bon(operateur) : # valeur
-                    self.attendre(operateur, "Un operateur arithmétique est attendu")
+                    self.attendre(operateur)
                     self.attendre(set(range(1, 5)), "Un identifiant est entendu après un operateur arithmétique est attendu")
             elif self.tout_est_bon(1104) : # ,
                 while self.tout_est_bon(1104) :
-                    self.attendre(1104, "Un séparateur de valeur est attendu")
+                    self.attendre(1104)
                     self.attendre(liste, "Une valeur est attendu")
                     if self.tout_est_bon(set(range(400, 406))) : # + - 
                         operateur = set(range(400, 406))
                         while self.tout_est_bon(operateur) : # valeur
-                            self.attendre(operateur, "Un operateur arithmétique est attendu")
+                            self.attendre(operateur)
                             self.attendre(set(range(1, 5)), "Une valeur est entendu après un operateur arithmétique est attendu")
 
 
@@ -245,32 +240,32 @@ class Parseur :
         liste = set(range(1, 5))
         liste.update([300, 301])
         if self.tout_est_bon(liste) : # valeur
-            self.attendre(liste, "Une valeur est attendu")
+            self.attendre(liste)
             if self.tout_est_bon(set(range(400, 406))) : # + - 
                 operateur = set(range(400, 406))
                 while self.tout_est_bon(operateur) : # valeur
-                    self.attendre(operateur, "Un operateur arithmétique est attendu")
+                    self.attendre(operateur)
                     self.attendre(set(range(1, 5)), "Un identifiant est entendu après un operateur arithmétique est attendu")
             elif self.tout_est_bon(1104) :
                 while self.tout_est_bon(1104) :
-                    self.attendre(1104, "Un séparateur de valeur est attendu")
+                    self.attendre(1104)
                     self.attendre(liste, "Une valeur est attendu")
                     if self.tout_est_bon(set(range(400, 406))) : # + - 
                         operateur = set(range(400, 406))
                         while self.tout_est_bon(operateur) : # valeur
-                            self.attendre(operateur, "Un operateur arithmétique est attendu")
+                            self.attendre(operateur)
                             self.attendre(set(range(1, 5)), "Une valeur est entendu après un operateur arithmétique est attendu")
         self.attendre(1103, "Un parent fermant est attendu après le nom de la fonction déclarée")
 #-----------------------------------------------Continue----------------------------------------------------------------------------
     def analyser_continue(self) :
         ligne = self.pointer["ligne"]
-        self.attendre(105, "Une fonction pour continuer est attendu")
+        self.attendre(105)
         if ligne == self.pointer["ligne"] :
             self.attendre(0, "Après une fonction continuer rien n'est mit sur la ligne")
 #-----------------------------------------------PASS------------------------------------------------------------------------------------
     def analyser_pass(self) :
         ligne = self.pointer["ligne"]
-        self.attendre(105, "Une fonction pour passer est attendu")
+        self.attendre(105)
         if ligne == self.pointer["ligne"] :
             self.attendre(0, "Après une fonction passer rien n'est mit sur la ligne")
 #------------------------------------------------ANALYSER---------------------------------------------------------------------------
@@ -278,29 +273,29 @@ class Parseur :
         while self.pointer and self.pointer['type'] != "FIN_FICHIER" : 
             match self.pointer['code'] : 
                 case 1 : # identifiant
-                    self.attendre(1, "Un identifiant est attendu")
+                    self.attendre(1)
                     self.analyser_affectation()
                 case 100 | 101 | 103 : # if, elif, while 
-                    self.attendre([100, 101, 103], "Mot-clé de structure conditionnelle/boucle attendu")
+                    self.attendre([100, 101, 103])
                     self.analyser_if()
                 case 103 : # else
-                    self.attendre(102, "Le mot-clé condition sinon est attendu")
+                    self.attendre(102)
                     self.analyser_else()
                 case 200 : # def
-                    self.attendre(200, "Le mot-clé de création de fonction est attendu")
+                    self.attendre(200)
                     self.analyser_def()
                 case 201 : # return
-                    self.attendre(201, "Le mot-clé du retour est attendu")
+                    self.attendre(201)
                     self.analyser_return()
                 case 104 : # break
-                    self.attendre(104, "Le mot clé pour sortir d'un bloc est attendu")
+                    self.attendre(104)
                     self.analyser_break()
                 case 105 : # continue
-                    self.analyser_continue()
+                    self.analyser_continue() # Spécial
                 case 106 : # pass
-                    self.analyser_pass()
+                    self.analyser_pass()# Spécial
                 case 202 : # print
-                    self.attendre(202, "Une fonction pour afficher est attendu")
+                    self.attendre(202)
                     self.analyser_print()
                 case _ :
                     #self.attendre(0, "terme inconnu / mauvais emplacement")
